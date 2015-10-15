@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import org.jetbrains.anko.find
 import java.io.File
 import kotlin.test.assertNotNull
 
@@ -32,9 +33,8 @@ class ListingAdapter : ArrayAdapter<File> {
             v = assertNotNull(v);
         }
 
-
-        val nameView = v.findViewById(R.id.name_text_view) as TextView
-        val detailsView = v.findViewById(R.id.details_text_view) as TextView
+        val nameView = v.find<TextView>(R.id.name_text_view)
+        val detailsView = v.find<TextView>(R.id.details_text_view)
         val file = getItem(position)
 
         if (!file.isDirectory) {
