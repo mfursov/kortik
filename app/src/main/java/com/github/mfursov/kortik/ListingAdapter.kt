@@ -10,16 +10,7 @@ import org.jetbrains.anko.find
 import java.io.File
 import kotlin.test.assertNotNull
 
-class ListingAdapter : ArrayAdapter<File> {
-    private val activityContext: Context;
-    private val resource: Int;
-    private val files: List<File>;
-
-    constructor(c: Context, res: Int, listing: List<File>) : super(c, res, listing) {
-        this.activityContext = c
-        this.resource = res
-        this.files = listing;
-    }
+class ListingAdapter(val activityContext: Context, val resource: Int, val files: List<File>) : ArrayAdapter<File>(activityContext, resource, files) {
 
     override fun getItem(i: Int): File {
         return files.get(i)
@@ -39,7 +30,7 @@ class ListingAdapter : ArrayAdapter<File> {
 
         if (!file.isDirectory) {
             if (file.length() > 0) {
-                detailsView.text = "" + file.length();
+                detailsView.text = "" + file.length()
             }
         }
         nameView.text = file.name

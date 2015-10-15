@@ -7,21 +7,19 @@ import android.content.Intent
 import android.content.Loader
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.debug
+import org.jetbrains.anko.longToast
 import java.io.File
-import java.util.*
+import java.util.ArrayList
 
-class ListingPresenter : LoaderManager.LoaderCallbacks<List<File>> {
+class ListingPresenter(val view: ListingView) : LoaderManager.LoaderCallbacks<List<File>>, AnkoLogger {
 
-    val view: ListingView;
     val state = ListingState()
-    val listingAdapter: ListingAdapter
+    val listingAdapter: ListingAdapter = ListingAdapter(view.activity, R.layout.list_row, ArrayList())
     var fileLoader: Loader<List<File>>
 
-    constructor(view: ListingView) {
-        this.view = view;
-        listingAdapter = ListingAdapter(view.activity, R.layout.list_row, ArrayList());
+    init {
         view.listAdapter = listingAdapter;
         fileLoader = view.activity.loaderManager.initLoader(0, null, this);
         fileLoader.forceLoad();
@@ -55,11 +53,10 @@ class ListingPresenter : LoaderManager.LoaderCallbacks<List<File>> {
                 i.setDataAndType(fileUri, mimeType)
                 view.activity.startActivity(i)
             } catch (e: ActivityNotFoundException) {
-                Toast.makeText(view.activity, "The System understands this file type," + "but no applications are installed to handle it.",
-                        Toast.LENGTH_LONG).show()
+                view.activity.longToast("The System understands this file type, but no applications are installed to handle it.");
             }
         } else {
-            Toast.makeText(view.activity, "System doesn't know how to handle that file type!", Toast.LENGTH_LONG).show()
+            view.activity.longToast("System doesn't know how to handle that file type!");
         }
     }
 
@@ -73,7 +70,7 @@ class ListingPresenter : LoaderManager.LoaderCallbacks<List<File>> {
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<File>> {
         var fileLoader = object : AsyncTaskLoader<List<File>>(view.activity) {
             override fun loadInBackground(): List<File> {
-                Log.i("Loader", "loadInBackground()")
+                debug { "loadInBackground()" }
                 return state.getAllFiles(state.dir)
             }
         }

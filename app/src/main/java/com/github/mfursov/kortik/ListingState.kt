@@ -4,19 +4,21 @@ import android.net.Uri
 import android.os.Environment
 import android.util.Log
 import android.webkit.MimeTypeMap
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 import java.io.File
 import java.util.*
 
-class ListingState {
+class ListingState : AnkoLogger {
     var dir: File
 
     init {
         if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
             dir = Environment.getExternalStorageDirectory()
-            Log.i(TAG, "" + dir)
+            info { dir }
         } else {
             dir = File("")
-            Log.i(TAG, "External storage unavailable")
+            info { "External storage unavailable" }
         }
     }
 
@@ -52,9 +54,5 @@ class ListingState {
             mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
         }
         return mimeType
-    }
-
-    companion object {
-        val TAG = "Current dir"
     }
 }
