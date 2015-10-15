@@ -9,21 +9,15 @@ import android.widget.TextView
 import java.io.File
 import kotlin.test.assertNotNull
 
-class FileArrayAdapter : ArrayAdapter<File> {
+class ListingAdapter : ArrayAdapter<File> {
     private val activityContext: Context;
     private val resource: Int;
     private val files: List<File>;
 
-    constructor(c: Context, res: Int, files: List<File>) : super(c, res, files) {
+    constructor(c: Context, res: Int, listing: List<File>) : super(c, res, listing) {
         this.activityContext = c
         this.resource = res
-        this.files = files;
-    }
-
-    constructor(c: Context, res: Int) : super(c, res) {
-        activityContext = c
-        resource = res
-        this.files = emptyList();
+        this.files = listing;
     }
 
     override fun getItem(i: Int): File {

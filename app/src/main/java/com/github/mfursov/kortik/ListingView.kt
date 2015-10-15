@@ -2,21 +2,16 @@ package com.github.mfursov.kortik
 
 import android.app.ListFragment
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ListView
 
 /**
  * A placeholder fragment containing a simple view.
  */
-class MainActivityFragment : ListFragment() {
+class ListingView : ListFragment() {
 
-    //This is a passive view, so my presenter handles all of the updating, etc.
-    var presenter: Presenter? = null;
+    //This is a passive view, so a presenter handles all of the updating, etc.
+    var presenter: ListingPresenter? = null;
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_main, container, false)
@@ -25,9 +20,8 @@ class MainActivityFragment : ListFragment() {
     //This is a good place to do final initialization as the Fragment is finished initializing itself.
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState);
-        presenter = Presenter(this);
+        presenter = ListingPresenter(this);
 
-        /*I am not using this, but I like to enable it just in case I want to populate the overflow menu with menu options*/
         setHasOptionsMenu(true);
     }
 
