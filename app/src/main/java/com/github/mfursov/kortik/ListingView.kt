@@ -19,7 +19,7 @@ class ListingView : ListFragment() {
     var presenter: ListingPresenter? = null;
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_main, container, false)
+        return inflater.inflate(R.layout.fragment_listing, container, false)
     }
 
     //This is a good place to do final initialization as the Fragment is finished initializing itself.
@@ -32,7 +32,7 @@ class ListingView : ListFragment() {
 
     override fun onListItemClick(listView: ListView?, view: View?, position: Int, id: Long) {
         super.onListItemClick(listView, view, position, id);
-        presenter!!.listItemClicked(position);
+        presenter?.listItemClicked(position);
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
@@ -41,7 +41,7 @@ class ListingView : ListFragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        var id = item!!.itemId;
+        var id = item?.itemId;
         when (id) {
             android.R.id.home -> presenter!!.homePressed();
         }
