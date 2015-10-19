@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="#33446A"
               android:paddingLeft="10dip"
               android:paddingRight="10dip">
 
@@ -22,5 +21,5 @@
         android:layout_height="wrap_content"
         android:padding="5dip"
         android:textColor="@android:color/white"
-        android:textSize="15sp"/>
+        android:textSize="12sp"/>
 </LinearLayout>
