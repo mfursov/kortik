@@ -1,23 +1,32 @@
 package com.github.mfursov.kortik
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.media.MediaPlayer
+import android.net.Uri
 import com.github.mfursov.kortik.util.log
 import com.github.mfursov.kortik.util.withListingDir
-import org.jetbrains.anko.browse
+import com.github.mfursov.kortik.util.withPlayingFile
 import org.jetbrains.anko.debug
+import org.jetbrains.anko.error
 import org.jetbrains.anko.longToast
+import org.jetbrains.anko.newTask
 import org.jetbrains.anko.toast
 import java.io.File
 
 
+fun canGoUp(): Boolean {
+    return Kortik.state.listingDir.parentFile?.canRead() ?: false;
+}
+
 fun folderUp() {
     log.debug { "Go up from ${Kortik.state.listingDir}" }
-    val parentDir = Kortik.state.listingDir.parentFile;
-    if (parentDir?.canRead() ?: false) {
-        changeListingDir(parentDir)
+    if (canGoUp()) {
+        changeListingDirTo(Kortik.state.listingDir.parentFile)
     }
 }
 
-fun changeListingDir(dir: File) {
+fun changeListingDirTo(dir: File) {
     log.debug { "Change dir to  $dir" }
     if (dir.isDirectory && dir.canRead()) {
         Kortik.state = Kortik.state.withListingDir(dir)
@@ -29,11 +38,46 @@ fun changeListingDir(dir: File) {
 fun openFile(file: File) {
     log.debug { "Open file: $file" }
     if (file.isDirectory) {
-        changeListingDir(file)
+        changeListingDirTo(file)
         return;
     }
-    val rc = Kortik.appContext?.browse(file.absolutePath) ?: false //todo: stackTrace?
-    if (!rc) {
-        Kortik.appContext?.longToast("System doesn't know how to handle that file type!");
+    val context = Kortik.appContext ?: return
+
+    if (!file.extension.toLowerCase().endsWith("mp3")) {
+        try {
+            context.startActivity(Intent().newTask().setData(Uri.parse(file.absolutePath)));
+        } catch (e: ActivityNotFoundException) {
+            context.longToast("System doesn't know how to handle that file type!");
+        }
+        return;
+    }
+    Kortik.state.mediaPlayer?.stop()
+    if (Kortik.state.playingFile == file) {
+        stopPlayback();
+        return;
+    }
+    startPlayback(file)
+}
+
+private fun startPlayback(file: File) {
+    val context = Kortik.appContext ?: return
+    try {
+        val mediaPlayer = MediaPlayer.create(context, Uri.fromFile(file))
+        Kortik.state = Kortik.state.withPlayingFile(mediaPlayer, file)
+        mediaPlayer.start()
+    } catch(e: Exception) {
+        context.longToast("Failed to start media player for file!");
+        log.error("", e)
+    }
+}
+
+fun stopPlayback() {
+    try {
+        Kortik.state.mediaPlayer?.stop();
+        Kortik.state.mediaPlayer?.release();
+        Kortik.state = Kortik.state.withPlayingFile(null, null);
+    } catch(e: Exception) {
+        Kortik.appContext?.longToast("Failed to stop media player!");
+        log.error("", e)
     }
 }

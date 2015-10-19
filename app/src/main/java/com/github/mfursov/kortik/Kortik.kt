@@ -1,5 +1,6 @@
 package com.github.mfursov.kortik
 
+import android.media.MediaPlayer
 import com.github.mfursov.kortik.util.KortikLogger
 import com.github.mfursov.kortik.util.getDefaultListingDir
 import org.jetbrains.anko.debug
@@ -35,7 +36,8 @@ interface AppStateListener {
     fun onStateChanged(state: AppState)
 }
 
-data class AppState(val listingDir: File, val playingFile: File ?)
-
-fun unused() {
-}
+data class AppState(
+        val listingDir: File,
+        val playingFile: File ?,
+        val mediaPlayer: MediaPlayer? = null
+) {}

@@ -14,7 +14,7 @@ import org.jetbrains.anko.debug
 import java.io.File
 import java.util.ArrayList
 
-class ListingPresenter(val listingView: ListingView) : LoaderManager.LoaderCallbacks<List<File>>, KortikLogger, AppStateListener {
+class ListingController(val listingView: ListingView) : LoaderManager.LoaderCallbacks<List<File>>, KortikLogger, AppStateListener {
 
     val listingAdapter: ListingAdapter = ListingAdapter(listingView.activity, R.layout.row_listing, ArrayList())
     val fileLoader: Loader<List<File>>
