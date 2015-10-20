@@ -4,9 +4,15 @@
       tools:context=".MainActivity">
 
     <item
+        android:id="@+id/action_goto_playing"
+        android:orderInCategory="100"
+        android:title="@string/action_goto_playing"
+        app:showAsAction="ifRoom"
+        />
+    <item
         android:id="@+id/action_stop_playback"
         android:orderInCategory="100"
         android:title="@string/action_stop_playback"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         />
 </menu>

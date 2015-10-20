@@ -18,7 +18,7 @@ import org.jetbrains.anko.debug
 class ListingView : ListFragment(), KortikLogger {
 
     //This is a passive view, so a presenter handles all of the updating, etc.
-    var presenter: ListingController? = null;
+    var controller: ListingController? = null;
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_listing, container, false)
@@ -28,22 +28,14 @@ class ListingView : ListFragment(), KortikLogger {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         debug { "onActivityCreated: bundle: $savedInstanceState" }
         super.onActivityCreated(savedInstanceState);
-        presenter = ListingController(this);
+        controller = ListingController(this);
         setHasOptionsMenu(true);
     }
 
     override fun onListItemClick(listView: ListView?, view: View?, position: Int, id: Long) {
         debug { "onListItemClick: $position" }
         super.onListItemClick(listView, view, position, id);
-        presenter?.listItemClicked(position);
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        var id = item?.itemId;
-        when (id) {
-            android.R.id.home -> presenter?.homePressed();
-        }
-        return super.onOptionsItemSelected(item);
+        controller?.listItemClicked(position);
     }
 
 }

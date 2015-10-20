@@ -17,13 +17,13 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
         navBarController.onCreate();
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        debug { "onCreateOptionsMenu $menu" }
-        menuInflater.inflate(R.menu.menu_main, menu);
-        return true
-    }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean = navBarController.onCreateOptionsMenu(menu, menuInflater)
 
-    override fun onDestroy() = navBarController.onDestroy();
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = navBarController.onOptionsItemSelected(item);
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean = navBarController.onPrepareOptionsMenu(menu)
+
+    override fun onDestroy() = navBarController.onDestroy()
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = navBarController.onOptionsItemSelected(item)
+
 }
 

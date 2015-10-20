@@ -45,8 +45,6 @@ class ListingController(val listingView: ListingView) : LoaderManager.LoaderCall
 
     fun listItemClicked(position: Int) = openFile(listingAdapter.getItem(position))
 
-    fun homePressed() = folderUp()
-
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<File>> {
         var fileLoader = object : AsyncTaskLoader<List<File>>(listingView.activity) {
             override fun loadInBackground(): List<File> {

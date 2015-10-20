@@ -72,6 +72,7 @@ private fun startPlayback(file: File) {
 }
 
 fun stopPlayback() {
+    log.debug { "stopPlayback: ${Kortik.state.playingFile}" }
     try {
         Kortik.state.mediaPlayer?.stop();
         Kortik.state.mediaPlayer?.release();
@@ -80,4 +81,14 @@ fun stopPlayback() {
         Kortik.appContext?.longToast("Failed to stop media player!");
         log.error("", e)
     }
+}
+
+fun focusToFile(file: File) {
+    changeListingDirTo(file.parentFile);
+    // todo:
+}
+
+fun gotoPlaying() {
+    val file = Kortik.state.playingFile ?: return
+    focusToFile(file);
 }

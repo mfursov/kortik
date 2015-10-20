@@ -1,35 +1,50 @@
 package com.github.mfursov.kortik
 
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import com.github.mfursov.kortik.util.KortikLogger
 import org.jetbrains.anko.debug
 
 class NavBarController(activity: AppCompatActivity) : AppStateListener, KortikLogger {
-    val activity: AppCompatActivity;
+    val activity: AppCompatActivity
 
     init {
-        this.activity = activity;
+        this.activity = activity
     }
 
-    fun onCreate() {
-        Kortik.addStateListener(this);
-        updateAvailableActions();
+    fun onCreate() = Kortik.addStateListener(this)
+
+    fun onDestroy() = Kortik.removeStateListener(this)
+
+
+    fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater): Boolean {
+        debug { "onCreateOptionsMenu $menu" }
+        menuInflater.inflate(R.menu.menu_main, menu);
+        return true;
     }
 
-    fun onDestroy() = Kortik.removeStateListener(this);
-
-    override fun onStateChanged(state: AppState) = updateAvailableActions();
-
-    private fun updateAvailableActions() {
+    fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        debug { "onPrepareOptionsMenu $menu, playing: ${Kortik.state.playingFile}" }
         activity.supportActionBar.setDisplayHomeAsUpEnabled(canGoUp())
+        menu ?: return true;
+        menu.findItem(R.id.action_goto_playing).setVisible(Kortik.state.playingFile != null);
+        return true;
+    }
+
+    override fun onStateChanged(state: AppState) {
+        activity.invalidateOptionsMenu();
     }
 
     fun onOptionsItemSelected(item: MenuItem): Boolean {
         debug { "onOptionsItemSelected $item" }
         when {
-            item.itemId == R.id.action_stop_playback -> stopPlayback();
+            item.itemId == R.id.action_stop_playback -> stopPlayback()
+            item.itemId == R.id.action_goto_playing -> gotoPlaying()
+            item.itemId == android.R.id.home -> folderUp();
         }
         return true;
     }
+
 }
