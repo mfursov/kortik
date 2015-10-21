@@ -11,7 +11,7 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
     private var navBarController: NavBarController = NavBarController(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        debug { "onCreate $savedInstanceState" }
+        debug { "MainActivity::onCreate $savedInstanceState" }
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         navBarController.onCreate();
@@ -21,9 +21,12 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean = navBarController.onPrepareOptionsMenu(menu)
 
-    override fun onDestroy() = navBarController.onDestroy()
+    override fun onDestroy() {
+        debug { "MainActivity::onDestroy" }
+        navBarController.onDestroy()
+        super.onDestroy()
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = navBarController.onOptionsItemSelected(item)
-
 }
 

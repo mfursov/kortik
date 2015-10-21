@@ -1,40 +1,46 @@
 package com.github.mfursov.kortik
 
-import android.app.LoaderManager
-import android.content.AsyncTaskLoader
-import android.content.Loader
 import android.os.Bundle
+import android.support.v4.app.LoaderManager
+import android.support.v4.content.AsyncTaskLoader
+import android.support.v4.content.Loader
 import android.view.View
 import android.widget.ListView
 import android.widget.TextView
 import com.github.mfursov.kortik.util.KortikLogger
-import com.github.mfursov.kortik.util.find
 import com.github.mfursov.kortik.util.getListing
 import org.jetbrains.anko.debug
+import org.jetbrains.anko.find
 import java.io.File
 import java.util.ArrayList
 
 class ListingController(val listingView: ListingView) : LoaderManager.LoaderCallbacks<List<File>>, KortikLogger, AppStateListener {
 
-    val listingAdapter: ListingAdapter = ListingAdapter(listingView.activity, R.layout.row_listing, ArrayList())
+    val listingAdapter: ListingAdapter
     val fileLoader: Loader<List<File>>
     val emptyLabel: TextView
     val listView: ListView
 
     init {
-        listingView.listAdapter = listingAdapter;
-        fileLoader = listingView.activity.loaderManager.initLoader(0, null, this);//todo: add loader ID to resources and reuse
-        fileLoader.forceLoad();
-        listView = listingView.find<ListView>(android.R.id.list);
-        emptyLabel = listingView.find<TextView>(R.id.empty_listing_label)
-        emptyLabel.visibility = View.GONE;
+        listView = listingView.view.find<ListView>(android.R.id.list)
+        emptyLabel = listingView.view.find<TextView>(R.id.empty_listing_label)
+        emptyLabel.visibility = View.GONE
         emptyLabel.setOnClickListener { folderUp() }
-        Kortik.addStateListener(this);
-        debug { "ListingPresenter initialized" }
+        listingAdapter = ListingAdapter(listingView.context, R.layout.row_listing, ArrayList())
+        listingView.listAdapter = listingAdapter
+        fileLoader = listingView.loaderManager.initLoader(0, null, this) //todo: add loader ID to resources and reuse
+        fileLoader.forceLoad()
+        Kortik.addStateListener(this)
+        debug { "ListingController::initialized" }
     }
 
-    private fun updateListing(listing: List<File>) {
-        debug { "setting listing to: $listing" }
+    fun onDestroy() {
+        debug { "ListingController::onDestroy" }
+        Kortik.removeStateListener(this);
+    }
+
+    private fun setListing(listing: List<File>) {
+        debug { "ListingController::setListing: $listing" }
         listingAdapter.setNotifyOnChange(false);
         listingAdapter.clear()
         listingAdapter.addAll(listing)
@@ -46,26 +52,29 @@ class ListingController(val listingView: ListingView) : LoaderManager.LoaderCall
     fun listItemClicked(position: Int) = openFile(listingAdapter.getItem(position))
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<File>> {
-        var fileLoader = object : AsyncTaskLoader<List<File>>(listingView.activity) {
+        debug { "ListingController::onCreateLoader" }
+        var fileLoader = object : AsyncTaskLoader<List<File>>(listingView.context) {
             override fun loadInBackground(): List<File> {
-                debug { "loading listing in background" }
+                debug { "ListingController::loadInBackground" }
                 return getListing(Kortik.state.listingDir)
             }
         }
         return fileLoader
     }
 
-    override fun onLoadFinished(loader: Loader<List<File>>?, data: List<File>) = updateListing(data)
+    override fun onLoadFinished(loader: Loader<List<File>>?, data: List<File>) = setListing(data)
 
     //not used for this data source.
     override fun onLoaderReset(loader: Loader<List<File>>) {
+        debug { "ListingController::onLoaderReset" }
         listingAdapter.clear()
         listingAdapter.notifyDataSetChanged()
     }
 
-    override fun onStateChanged(state: AppState) {
-        debug { "ListingView: onStateChanged" }
-        fileLoader.onContentChanged()
-
+    public fun refresh() {
+        debug { "ListingController::refresh" }
+        fileLoader.onContentChanged();
     }
+
+    override fun onStateChanged(state: AppState) = refresh()
 }

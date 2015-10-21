@@ -20,13 +20,13 @@ class NavBarController(activity: AppCompatActivity) : AppStateListener, KortikLo
 
 
     fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater): Boolean {
-        debug { "onCreateOptionsMenu $menu" }
+        debug { "NavBarController::onCreateOptionsMenu $menu" }
         menuInflater.inflate(R.menu.menu_main, menu);
         return true;
     }
 
     fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        debug { "onPrepareOptionsMenu $menu, playing: ${Kortik.state.playingFile}" }
+        debug { "NavBarController::onPrepareOptionsMenu $menu, playing: ${Kortik.state.playingFile}" }
         activity.supportActionBar.setDisplayHomeAsUpEnabled(canGoUp())
         menu ?: return true;
         menu.findItem(R.id.action_goto_playing).setVisible(Kortik.state.playingFile != null);
@@ -38,7 +38,7 @@ class NavBarController(activity: AppCompatActivity) : AppStateListener, KortikLo
     }
 
     fun onOptionsItemSelected(item: MenuItem): Boolean {
-        debug { "onOptionsItemSelected $item" }
+        debug { "NavBarController::onOptionsItemSelected $item" }
         when {
             item.itemId == R.id.action_stop_playback -> stopPlayback()
             item.itemId == R.id.action_goto_playing -> gotoPlaying()
@@ -46,5 +46,4 @@ class NavBarController(activity: AppCompatActivity) : AppStateListener, KortikLo
         }
         return true;
     }
-
 }
