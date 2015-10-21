@@ -43,6 +43,7 @@ fun openFile(file: File) {
     }
     val context = Kortik.appContext ?: return
 
+    //todo: create common place to handle media extensions
     if (!file.extension.toLowerCase().endsWith("mp3")) {
         try {
             context.startActivity(Intent().newTask().setData(Uri.parse(file.absolutePath)));
@@ -65,10 +66,21 @@ private fun startPlayback(file: File) {
         val mediaPlayer = MediaPlayer.create(context, Uri.fromFile(file))
         Kortik.state = Kortik.state.withPlayingFile(mediaPlayer, file)
         mediaPlayer.start()
+        mediaPlayer.setOnCompletionListener({ val nextFile = getNextMediaFile(file); if (nextFile != null) startPlayback(nextFile) })
     } catch(e: Exception) {
-        context.longToast("Failed to start media player for file!");
+        context.longToast("Failed to start media player for file!")
         log.error("", e)
     }
+}
+
+fun getNextMediaFile(file: File): File? {
+    val files: Array<out File> = file.parentFile.listFiles() ?: return null
+    val mp3Files = files.filter { it.isFile and it.canRead() and it.extension.toLowerCase().equals("mp3") }
+    var idx = mp3Files.indexOf(file); // todo: store sort order on playback start.
+    if (idx < 0 || idx == mp3Files.size() - 1 ) {
+        return null
+    }
+    return mp3Files.get(idx + 1)
 }
 
 fun stopPlayback() {

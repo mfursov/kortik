@@ -9,17 +9,20 @@ import org.jetbrains.anko.debug
 
 class MainActivity : AppCompatActivity(), KortikLogger {
     private var navBarController: NavBarController = NavBarController(this)
+    private var playBarController: PlayBarController = PlayBarController(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         debug { "MainActivity::onCreate $savedInstanceState" }
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        navBarController.onCreate();
+        navBarController.onCreate()
+        playBarController.onCreate()
     }
 
     override fun onDestroy() {
         debug { "MainActivity::onDestroy" }
         navBarController.onDestroy()
+        playBarController.onDestroy()
         super.onDestroy()
     }
 
