@@ -26,7 +26,7 @@ class PlayBarController(activity: MainActivity) : AppStateListener, KortikLogger
 
     override fun onStateChanged(state: AppState) {
         debug { "PlayBarController::onStateChanged" }
-        activity.findViewById(R.id.action_stop_playback) as ActionMenuItemView setEnabled(state.playingFile != null)
+        (activity.findViewById(R.id.action_stop_playback) as ActionMenuItemView).isEnabled = state.playingFile != null
     }
 
     fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -77,7 +77,7 @@ fun getNextMediaFile(file: File): File? {
     val files: Array<out File> = file.parentFile.listFiles() ?: return null
     val mp3Files = files.filter { it.isFile and it.canRead() and it.extension.toLowerCase().equals("mp3") }
     var idx = mp3Files.indexOf(file); // todo: store sort order on playback start.
-    if (idx < 0 || idx == mp3Files.size() - 1 ) {
+    if (idx < 0 || idx == mp3Files.size - 1 ) {
         return null
     }
     return mp3Files.get(idx + 1)

@@ -12,7 +12,7 @@ import kotlin.test.assertNotNull
 
 class ListingAdapter(val activityContext: Context, val resource: Int, val files: List<File>) : ArrayAdapter<File>(activityContext, resource, files) {
 
-    override fun getItem(i: Int): File {
+    override infix fun getItem(i: Int): File {
         return files.get(i)
     }
 
