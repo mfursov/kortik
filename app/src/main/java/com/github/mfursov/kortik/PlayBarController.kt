@@ -32,7 +32,10 @@ class PlayBarController(activity: MainActivity) : AppStateListener, KortikLogger
     fun onOptionsItemSelected(item: MenuItem): Boolean {
         debug { "PlayBarController::onOptionsItemSelected $item" }
         when {
+            item.itemId == R.id.action_pause_playback -> pausePlayback()
             item.itemId == R.id.action_stop_playback -> stopPlayback()
+            item.itemId == R.id.action_play_prev -> playNextFile(false);
+            item.itemId == R.id.action_play_next -> playNextFile(true);
         }
         return true;
     }

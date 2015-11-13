@@ -60,6 +60,13 @@ fun openFile(file: File) {
     startPlayback(file)
 }
 
+fun playNextFile(prev: Boolean = false) {
+    log.debug { "playNextFile: ${Kortik.state.playingFile}, prev: $prev" }
+    val file = Kortik.state.playingFile ?: return
+    val nextFile = getNextMediaFile(file, prev) ?: return
+    startPlayback(nextFile)
+}
+
 private fun startPlayback(file: File) {
     val context = Kortik.appContext ?: return
     try {
@@ -73,14 +80,32 @@ private fun startPlayback(file: File) {
     }
 }
 
-fun getNextMediaFile(file: File): File? {
+fun getNextMediaFile(file: File, prev: Boolean = false): File? {
     val files: Array<out File> = file.parentFile.listFiles() ?: return null
     val mp3Files = files.filter { it.isFile and it.canRead() and it.extension.toLowerCase().equals("mp3") }
     var idx = mp3Files.indexOf(file); // todo: store sort order on playback start.
-    if (idx < 0 || idx == mp3Files.size - 1 ) {
-        return null
+    if (idx < 0) {
+        return null;
     }
-    return mp3Files.get(idx + 1)
+    if (prev) {
+        return if (idx == 0) null else mp3Files.get(idx - 1);
+    }
+    return if (idx >= mp3Files.size - 1) null else mp3Files.get(idx + 1)
+}
+
+fun pausePlayback() {
+    log.debug { "pausePlayback: ${Kortik.state.playingFile}" }
+    try {
+        val player = Kortik.state.mediaPlayer ?: return;
+        if (player.isPlaying) {
+            player.pause();
+        } else {
+            player.start();
+        }
+    } catch(e: Exception) {
+        Kortik.appContext?.longToast("Failed to pause/resume media player!");
+        log.error("", e)
+    }
 }
 
 fun stopPlayback() {

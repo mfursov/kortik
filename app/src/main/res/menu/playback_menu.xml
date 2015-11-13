@@ -4,10 +4,31 @@
       tools:context=".MainActivity">
 
     <item
+        android:id="@+id/action_play_prev"
+        android:orderInCategory="100"
+        android:title="@string/action_play_prev"
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction"/>
+
+    <item
+        android:id="@+id/action_pause_playback"
+        android:orderInCategory="100"
+        android:title="@string/action_pause_playback"
+        app:showAsAction="always"
+        />
+
+    <item
         android:id="@+id/action_stop_playback"
         android:orderInCategory="100"
         android:title="@string/action_stop_playback"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/action_play_next"
+        android:orderInCategory="100"
+        android:title="@string/action_play_next"
+        app:showAsAction="always"
         />
 
 </menu>
