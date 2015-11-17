@@ -1,41 +1,20 @@
-package com.github.mfursov.kortik
+package com.github.mfursov.kortik.action
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
+import com.github.mfursov.kortik.Kortik
 import com.github.mfursov.kortik.util.log
-import com.github.mfursov.kortik.util.withListingDir
 import com.github.mfursov.kortik.util.withPlayingFile
 import org.jetbrains.anko.debug
 import org.jetbrains.anko.error
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.newTask
-import org.jetbrains.anko.toast
 import java.io.File
 
 
-fun canGoUp(): Boolean {
-    return Kortik.state.listingDir.parentFile?.canRead() ?: false;
-}
-
-fun folderUp() {
-    log.debug { "Go up from ${Kortik.state.listingDir}" }
-    if (canGoUp()) {
-        changeListingDirTo(Kortik.state.listingDir.parentFile)
-    }
-}
-
-fun changeListingDirTo(dir: File) {
-    log.debug { "Change dir to  $dir" }
-    if (dir.isDirectory && dir.canRead()) {
-        Kortik.state = Kortik.state.withListingDir(dir)
-    } else {
-        Kortik.appContext?.toast("Can't access to that dir");
-    }
-}
-
-fun openFile(file: File) {
+public fun openFile(file: File) {
     log.debug { "Open file: $file" }
     if (file.isDirectory) {
         changeListingDirTo(file)
@@ -52,7 +31,6 @@ fun openFile(file: File) {
         }
         return;
     }
-    Kortik.state.mediaPlayer?.stop()
     if (Kortik.state.playingFile == file) {
         stopPlayback();
         return;
@@ -60,16 +38,13 @@ fun openFile(file: File) {
     startPlayback(file)
 }
 
-fun playNextFile(prev: Boolean = false) {
-    log.debug { "playNextFile: ${Kortik.state.playingFile}, prev: $prev" }
-    val file = Kortik.state.playingFile ?: return
-    val nextFile = getNextMediaFile(file, prev) ?: return
-    startPlayback(nextFile)
-}
 
 private fun startPlayback(file: File) {
     val context = Kortik.appContext ?: return
     try {
+        if (Kortik.state.mediaPlayer?.isPlaying ?: false) {
+            stopPlayback();
+        }
         val mediaPlayer = MediaPlayer.create(context, Uri.fromFile(file))
         Kortik.state = Kortik.state.withPlayingFile(mediaPlayer, file)
         mediaPlayer.start()
@@ -80,17 +55,12 @@ private fun startPlayback(file: File) {
     }
 }
 
-fun getNextMediaFile(file: File, prev: Boolean = false): File? {
-    val files: Array<out File> = file.parentFile.listFiles() ?: return null
-    val mp3Files = files.filter { it.isFile and it.canRead() and it.extension.toLowerCase().equals("mp3") }
-    var idx = mp3Files.indexOf(file); // todo: store sort order on playback start.
-    if (idx < 0) {
-        return null;
-    }
-    if (prev) {
-        return if (idx == 0) null else mp3Files.get(idx - 1);
-    }
-    return if (idx >= mp3Files.size - 1) null else mp3Files.get(idx + 1)
+
+fun playNextFile(prev: Boolean = false) {
+    log.debug { "playNextFile: ${Kortik.state.playingFile}, prev: $prev" }
+    val file = Kortik.state.playingFile ?: return
+    val nextFile = getNextMediaFile(file, prev) ?: return
+    startPlayback(nextFile)
 }
 
 fun pausePlayback() {
@@ -120,12 +90,15 @@ fun stopPlayback() {
     }
 }
 
-fun focusToFile(file: File) {
-    changeListingDirTo(file.parentFile);
-    // todo:
-}
-
-fun gotoPlaying() {
-    val file = Kortik.state.playingFile ?: return
-    focusToFile(file);
+fun getNextMediaFile(file: File, prev: Boolean = false): File? {
+    val files: Array<out File> = file.parentFile.listFiles() ?: return null
+    val mp3Files = files.filter { it.isFile and it.canRead() and it.extension.toLowerCase().equals("mp3") }
+    var idx = mp3Files.indexOf(file); // todo: store sort order on playback start.
+    if (idx < 0) {
+        return null;
+    }
+    if (prev) {
+        return if (idx == 0) null else mp3Files.get(idx - 1);
+    }
+    return if (idx >= mp3Files.size - 1) null else mp3Files.get(idx + 1)
 }

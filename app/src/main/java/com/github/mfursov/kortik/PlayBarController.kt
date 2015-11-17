@@ -3,6 +3,9 @@ package com.github.mfursov.kortik
 import android.support.v7.internal.view.menu.ActionMenuItemView
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
+import com.github.mfursov.kortik.action.pausePlayback
+import com.github.mfursov.kortik.action.playNextFile
+import com.github.mfursov.kortik.action.stopPlayback
 import com.github.mfursov.kortik.util.KortikLogger
 import org.jetbrains.anko.debug
 

@@ -4,6 +4,9 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import com.github.mfursov.kortik.action.canGoUp
+import com.github.mfursov.kortik.action.folderUp
+import com.github.mfursov.kortik.action.gotoPlaying
 import com.github.mfursov.kortik.util.KortikLogger
 import org.jetbrains.anko.debug
 

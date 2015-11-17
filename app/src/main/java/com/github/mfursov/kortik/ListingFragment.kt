@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.TextView
+import com.github.mfursov.kortik.action.openFile
 import com.github.mfursov.kortik.util.KortikLogger
 import com.github.mfursov.kortik.util.getListing
 import org.jetbrains.anko.debug
