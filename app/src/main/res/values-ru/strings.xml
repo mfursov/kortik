@@ -3,4 +3,9 @@
     <string name="app_name">Kortik</string>
     <string name="action_settings">Настройки</string>
     <string name="folder_is_empty">Папка пуста</string>
+    <string name="action_goto_playing">К активному</string>
+    <string name="action_pause_playback">Пауза</string>
+    <string name="action_play_next">Следующий</string>
+    <string name="action_play_prev">Предыдущий</string>
+    <string name="action_stop_playback">Стоп</string>
 </resources>

@@ -4,7 +4,10 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
+import android.os.PowerManager
+import com.github.mfursov.kortik.Constants
 import com.github.mfursov.kortik.Kortik
+import com.github.mfursov.kortik.PlaybackService
 import com.github.mfursov.kortik.util.log
 import com.github.mfursov.kortik.util.withPlayingFile
 import org.jetbrains.anko.debug
@@ -45,10 +48,14 @@ private fun startPlayback(file: File) {
         if (Kortik.state.mediaPlayer?.isPlaying ?: false) {
             stopPlayback();
         }
-        val mediaPlayer = MediaPlayer.create(context, Uri.fromFile(file))
-        Kortik.state = Kortik.state.withPlayingFile(mediaPlayer, file)
-        mediaPlayer.start()
-        mediaPlayer.setOnCompletionListener({ val nextFile = getNextMediaFile(file); if (nextFile != null) startPlayback(nextFile) })
+        val player = MediaPlayer.create(context, Uri.fromFile(file))
+        Kortik.state = Kortik.state.withPlayingFile(player, file)
+        player.start()
+        player.setWakeMode(Kortik.appContext, PowerManager.PARTIAL_WAKE_LOCK)
+        player.setOnCompletionListener({ val nextFile = getNextMediaFile(file); if (nextFile != null) startPlayback(nextFile) })
+
+        // start service with foreground notification
+        context.startService(Intent(context, PlaybackService::class.java).setAction(Constants.START_FOREGROUND_ACTION));
     } catch(e: Exception) {
         context.longToast("Failed to start media player for file!")
         log.error("", e)
@@ -71,6 +78,7 @@ fun pausePlayback() {
             player.pause();
         } else {
             player.start();
+            player.setWakeMode(Kortik.appContext, PowerManager.PARTIAL_WAKE_LOCK)
         }
     } catch(e: Exception) {
         Kortik.appContext?.longToast("Failed to pause/resume media player!");
@@ -84,6 +92,7 @@ fun stopPlayback() {
         Kortik.state.mediaPlayer?.stop();
         Kortik.state.mediaPlayer?.release();
         Kortik.state = Kortik.state.withPlayingFile(null, null);
+        Kortik.appContext?.startService(Intent(Kortik.appContext, PlaybackService::class.java).setAction(Constants.STOP_FOREGROUND_ACTION));
     } catch(e: Exception) {
         Kortik.appContext?.longToast("Failed to stop media player!");
         log.error("", e)
