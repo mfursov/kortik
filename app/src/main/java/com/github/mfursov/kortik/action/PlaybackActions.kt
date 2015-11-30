@@ -101,13 +101,14 @@ fun stopPlayback() {
 
 fun getNextMediaFile(file: File, prev: Boolean = false): File? {
     val files: Array<out File> = file.parentFile.listFiles() ?: return null
-    val mp3Files = files.filter { it.isFile and it.canRead() and it.extension.toLowerCase().equals("mp3") }
-    var idx = mp3Files.indexOf(file); // todo: store sort order on playback start.
+    var mp3Files = files.filter { it.isFile and it.canRead() and it.extension.toLowerCase().equals("mp3") }
+    mp3Files = mp3Files.sorted();
+    var idx = mp3Files.indexOf(file);
     if (idx < 0) {
         return null;
     }
     if (prev) {
-        return if (idx == 0) null else mp3Files.get(idx - 1);
+        return if (idx == 0) null else mp3Files[idx - 1];
     }
-    return if (idx >= mp3Files.size - 1) null else mp3Files.get(idx + 1)
+    return if (idx >= mp3Files.size - 1) null else mp3Files[idx + 1]
 }

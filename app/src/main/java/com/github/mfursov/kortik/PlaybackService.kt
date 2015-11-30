@@ -45,9 +45,9 @@ class PlaybackService : Service() {
                 val pendingNextIntent = PendingIntent.getService(this, 0, nextIntent, 0);
 
                 val notification = NotificationCompat.Builder(this)
-                        .setContentTitle("Kortik Music Player")
-                        .setTicker("Kortik Music Player")
-                        .setContentText("My Music")
+                        .setContentTitle("Kortik Music Player") //TODO:
+                        .setTicker("Kortik Music Player") //TODO:
+                        .setContentText(Kortik.state.playingFile?.nameWithoutExtension)
                         .setSmallIcon(android.R.drawable.sym_def_app_icon)
                         // .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
                         .setContentIntent(pendingIntent)
