@@ -3,7 +3,7 @@ package com.github.mfursov.kortik
 import android.support.v7.internal.view.menu.ActionMenuItemView
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
-import com.github.mfursov.kortik.action.pausePlayback
+import com.github.mfursov.kortik.action.togglePausePlayback
 import com.github.mfursov.kortik.action.playNextFile
 import com.github.mfursov.kortik.action.stopPlayback
 import com.github.mfursov.kortik.util.KortikLogger
@@ -35,7 +35,7 @@ class PlayBarController(activity: MainActivity) : AppStateListener, KortikLogger
     fun onOptionsItemSelected(item: MenuItem): Boolean {
         debug { "PlayBarController::onOptionsItemSelected $item" }
         when {
-            item.itemId == R.id.action_pause_playback -> pausePlayback()
+            item.itemId == R.id.action_pause_playback -> togglePausePlayback()
             item.itemId == R.id.action_stop_playback -> stopPlayback()
             item.itemId == R.id.action_play_prev -> playNextFile(false);
             item.itemId == R.id.action_play_next -> playNextFile(true);

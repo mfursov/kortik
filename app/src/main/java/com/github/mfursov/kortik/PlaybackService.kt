@@ -5,7 +5,7 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import android.support.v4.app.NotificationCompat
-import com.github.mfursov.kortik.action.pausePlayback
+import com.github.mfursov.kortik.action.togglePausePlayback
 import com.github.mfursov.kortik.action.playNextFile
 import com.github.mfursov.kortik.util.log
 import org.jetbrains.anko.debug
@@ -62,7 +62,7 @@ class PlaybackService : Service() {
                 playNextFile(true)
             }
             Constants.PLAY_ACTION -> {
-                pausePlayback()
+                togglePausePlayback()
             }
             Constants.NEXT_ACTION -> {
                 playNextFile(false)

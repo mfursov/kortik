@@ -70,7 +70,7 @@ fun playNextFile(prev: Boolean = false) {
     startPlayback(nextFile)
 }
 
-fun pausePlayback() {
+fun togglePausePlayback() {
     log.debug { "pausePlayback: ${Kortik.state.playingFile}" }
     try {
         val player = Kortik.state.mediaPlayer ?: return;
