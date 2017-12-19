@@ -10,12 +10,7 @@ import com.github.mfursov.kortik.action.gotoPlaying
 import com.github.mfursov.kortik.util.KortikLogger
 import org.jetbrains.anko.debug
 
-class NavBarController(activity: AppCompatActivity) : AppStateListener, KortikLogger {
-    val activity: AppCompatActivity
-
-    init {
-        this.activity = activity
-    }
+class NavBarController(private val activity: AppCompatActivity) : AppStateListener, KortikLogger {
 
     fun onCreate() = Kortik.addStateListener(this)
 
@@ -24,28 +19,28 @@ class NavBarController(activity: AppCompatActivity) : AppStateListener, KortikLo
 
     fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater): Boolean {
         debug { "NavBarController::onCreateOptionsMenu $menu" }
-        menuInflater.inflate(R.menu.navigation_menu, menu);
-        return true;
+        menuInflater.inflate(R.menu.navigation_menu, menu)
+        return true
     }
 
     fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         debug { "NavBarController::onPrepareOptionsMenu $menu" }
-        activity.supportActionBar.setDisplayHomeAsUpEnabled(canGoUp())
-        menu ?: return true;
-        menu.findItem(R.id.action_goto_playing).setVisible(Kortik.state.playingFile != null);
-        return true;
+        activity.supportActionBar!!.setDisplayHomeAsUpEnabled(canGoUp())
+        menu ?: return true
+        menu.findItem(R.id.action_goto_playing).isVisible = Kortik.state.playingFile != null
+        return true
     }
 
     override fun onStateChanged(state: AppState) {
-        activity.invalidateOptionsMenu();
+        activity.invalidateOptionsMenu()
     }
 
     fun onOptionsItemSelected(item: MenuItem): Boolean {
         debug { "NavBarController::onOptionsItemSelected $item" }
         when {
             item.itemId == R.id.action_goto_playing -> gotoPlaying()
-            item.itemId == android.R.id.home -> folderUp();
+            item.itemId == android.R.id.home -> folderUp()
         }
-        return true;
+        return true
     }
 }

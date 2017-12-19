@@ -8,7 +8,7 @@ import org.jetbrains.anko.toast
 import java.io.File
 
 fun canGoUp(): Boolean {
-    return Kortik.state.listingDir.parentFile?.canRead() ?: false;
+    return Kortik.state.listingDir.parentFile?.canRead() ?: false
 }
 
 fun folderUp() {
@@ -23,17 +23,17 @@ fun changeListingDirTo(dir: File) {
     if (dir.isDirectory && dir.canRead()) {
         Kortik.state = Kortik.state.withListingDir(dir)
     } else {
-        Kortik.appContext?.toast("Can't access to that dir");
+        Kortik.appContext?.toast("Can't access to that dir")
     }
 }
 
 
 fun focusToFile(file: File) {
-    changeListingDirTo(file.parentFile);
+    changeListingDirTo(file.parentFile)
     // todo:
 }
 
 fun gotoPlaying() {
     val file = Kortik.state.playingFile ?: return
-    focusToFile(file);
+    focusToFile(file)
 }

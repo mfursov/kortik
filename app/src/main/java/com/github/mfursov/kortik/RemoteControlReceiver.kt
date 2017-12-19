@@ -11,16 +11,16 @@ import com.github.mfursov.kortik.action.togglePausePlayback
 class RemoteControlReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         if (intent == null) {
-            return;
+            return
         }
-        val event: KeyEvent? = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
+        val event: KeyEvent? = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT)
         if (event == null || event.action != KeyEvent.ACTION_DOWN) {
             return
-        };
+        }
 
         when (event.keyCode) {
-            KeyEvent.KEYCODE_MEDIA_STOP -> stopPlayback();
-            KeyEvent.KEYCODE_HEADSETHOOK -> togglePausePlayback();
+            KeyEvent.KEYCODE_MEDIA_STOP -> stopPlayback()
+            KeyEvent.KEYCODE_HEADSETHOOK -> togglePausePlayback()
             KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE -> togglePausePlayback()
             KeyEvent.KEYCODE_MEDIA_NEXT -> playNextFile(false)
             KeyEvent.KEYCODE_MEDIA_PREVIOUS -> playNextFile(true)

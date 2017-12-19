@@ -9,26 +9,26 @@ import java.util.ArrayList
 import java.util.Collections
 
 object Kortik : KortikLogger {
-    var appContext: KortikApp? = null;
+    var appContext: KortikApp? = null
 
-    public var state = AppState(getDefaultListingDir(), null)
+    var state = AppState(getDefaultListingDir(), null)
         set(newState) {
             if (newState == field) {
-                return;
+                return
             }
             debug { "setState: $field -> $newState" }
-            field = newState;
+            field = newState
             stateListeners.forEach { it.onStateChanged(field) }
         }
 
     private val stateListeners: MutableList<AppStateListener> = Collections.synchronizedList(ArrayList())
 
-    public fun addStateListener(listener: AppStateListener) {
-        stateListeners += listener;
+    fun addStateListener(listener: AppStateListener) {
+        stateListeners += listener
     }
 
-    public fun removeStateListener(listener: AppStateListener) {
-        stateListeners -= listener;
+    fun removeStateListener(listener: AppStateListener) {
+        stateListeners -= listener
     }
 }
 

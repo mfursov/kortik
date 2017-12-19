@@ -9,5 +9,5 @@ fun AppState.withListingDir(listingDir: File): AppState {
 }
 
 fun AppState.withPlayingFile(mediaPlayer: MediaPlayer?, playingFile: File?): AppState {
-    return AppState(listingDir, playingFile, mediaPlayer);
+    return AppState(listingDir, playingFile, mediaPlayer)
 }

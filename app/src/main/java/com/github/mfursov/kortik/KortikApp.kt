@@ -5,6 +5,6 @@ import android.app.Application
 class KortikApp : Application() {
     override fun onCreate() {
         super.onCreate()
-        Kortik.appContext = this;
+        Kortik.appContext = this
     }
 }

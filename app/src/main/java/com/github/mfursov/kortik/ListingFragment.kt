@@ -34,7 +34,7 @@ class ListingFragment : ListFragment(), LoaderManager.LoaderCallbacks<List<File>
 
     override fun onDestroy() {
         debug { "ListingFragment::onDestroy" }
-        loaderManager.destroyLoader(loaderId);
+        loaderManager.destroyLoader(loaderId)
         super.onDestroy()
     }
 
@@ -68,18 +68,18 @@ class ListingFragment : ListFragment(), LoaderManager.LoaderCallbacks<List<File>
 
     private fun setListing(listing: List<File>) {
         debug { "ListingFragment::setListing: $listing" }
-        val adapter = listAdapter as ListingAdapter;
-        adapter.setNotifyOnChange(false);
+        val adapter = listAdapter as ListingAdapter
+        adapter.setNotifyOnChange(false)
         adapter.clear()
         adapter.addAll(listing)
         adapter.notifyDataSetChanged()
-        emptyLabel!!.visibility = if (listing.isEmpty()) View.VISIBLE else View.GONE;
-        listView.visibility = if (listing.isEmpty() ) View.GONE else View.VISIBLE;
+        emptyLabel!!.visibility = if (listing.isEmpty()) View.VISIBLE else View.GONE
+        listView.visibility = if (listing.isEmpty() ) View.GONE else View.VISIBLE
     }
 
     override fun onLoaderReset(loader: Loader<List<File>>?) {
         debug { "ListingFragment::onLoaderReset" }
-        val adapter = listAdapter as ListingAdapter;
+        val adapter = listAdapter as ListingAdapter
         adapter.clear()
         adapter.notifyDataSetChanged()
     }
@@ -88,7 +88,7 @@ class ListingFragment : ListFragment(), LoaderManager.LoaderCallbacks<List<File>
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<File>>? {
         debug { "ListingFragment::onCreateLoader" }
-        var fileLoader = object : AsyncTaskLoader<List<File>>(context) {
+        val fileLoader = object : AsyncTaskLoader<List<File>>(context) {
             override fun loadInBackground(): List<File> {
                 debug { "ListingFragment::loadInBackground" }
                 return getListing(Kortik.state.listingDir)
@@ -97,9 +97,9 @@ class ListingFragment : ListFragment(), LoaderManager.LoaderCallbacks<List<File>
         return fileLoader
     }
 
-    public fun refresh() {
+    private fun refresh() {
         debug { "ListingFragment::refresh" }
-        loaderManager.getLoader<Any>(loaderId).onContentChanged();
+        loaderManager.getLoader<Any>(loaderId).onContentChanged()
     }
 
     override fun onStateChanged(state: AppState) = refresh()
